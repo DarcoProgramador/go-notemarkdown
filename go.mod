@@ -4,7 +4,7 @@ go 1.22.2
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.5
-	github.com/gomarkdown/markdown v0.0.0-20240730141124-034f12af3bf6
+	github.com/yuin/goldmark v1.7.4
 )
 
 require (
