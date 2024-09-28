@@ -1,9 +1,34 @@
 package handlers
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"log/slog"
+
+	"github.com/Darcoprogramador/go-notemarkdown/storage"
+	"github.com/gofiber/fiber/v2"
+)
 
 func UploaderHandler(c *fiber.Ctx) error {
-	return c.SendString("Hello, World!")
+	file, err := c.FormFile("file")
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+	slog.Info("File recived", slog.String("file", file.Filename))
+	path, err := storage.SaveFile(file, "./storage/temp")
+
+	if err != nil {
+		slog.Error("Error saving file", slog.String("file", file.Filename), slog.String("error", err.Error()))
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "File uploaded successfully",
+		"path":    path,
+	})
 }
 
 func RenderMDtoHTMLHandler(c *fiber.Ctx) error {
