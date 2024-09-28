@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"io"
 	"log/slog"
 	"strings"
 
 	"github.com/Darcoprogramador/go-notemarkdown/storage"
+	"github.com/Darcoprogramador/go-notemarkdown/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -40,7 +42,34 @@ func UploaderHandler(c *fiber.Ctx) error {
 }
 
 func RenderMDtoHTMLHandler(c *fiber.Ctx) error {
-	return c.SendString("Hello, World!")
+	fileName := c.Params("filename")
+
+	if !strings.HasSuffix(fileName, ".md") {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "File must be a markdown file",
+		})
+	}
+
+	rawMdFile, err := storage.GetFile("./storage/temp/" + fileName)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+	defer rawMdFile.Close()
+
+	fileBytes, err := io.ReadAll(rawMdFile)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	htmlContent := utils.MdToHtmlHighlight(fileBytes)
+	return c.Render("index", fiber.Map{
+		"PageTitle": fileName,
+		"Content":   string(htmlContent),
+	})
 }
 
 func ListMDFilesHandler(c *fiber.Ctx) error {
