@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// SetupRoutes sets up the routes for the application
 func SetupRoutes(app *fiber.App) {
 	app.Post("/api/notes", handlers.UploaderHandler)
 	app.Get("/api/notes", handlers.ListMDFilesHandler)

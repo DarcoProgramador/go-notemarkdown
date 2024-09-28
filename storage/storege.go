@@ -7,6 +7,9 @@ import (
 	"os"
 )
 
+// SaveFile saves a file to the disk and returns the file path and an error
+// file is a pointer to a multipart.FileHeader
+// basePath is the path where the file will be saved
 func SaveFile(file *multipart.FileHeader, basePath string) (string, error) {
 	src, err := file.Open()
 	if err != nil {

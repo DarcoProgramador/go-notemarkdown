@@ -11,6 +11,8 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 )
 
+// MdToHTML converts markdown to html
+// md is a markdown file
 func MdToHTML(md []byte) []byte {
 	mdTo := goldmark.New(
 		goldmark.WithExtensions(extension.GFM),
@@ -30,6 +32,8 @@ func MdToHTML(md []byte) []byte {
 	return buf.Bytes()
 }
 
+// MdToHtmlHighlight converts markdown to html with syntax highlighting
+// md is a markdown file
 func MdToHtmlHighlight(md []byte) []byte {
 	mdTo := goldmark.New(
 		goldmark.WithExtensions(
