@@ -29,5 +29,32 @@ func SaveFile(file *multipart.FileHeader, basePath string) (string, error) {
 	}
 
 	return filePath, nil
+}
 
+// DeleteFile deletes a file from the disk and returns an error
+// filePath is the path to the file
+func DeleteFile(fileName, basePath string) error {
+	return os.Remove(basePath + "/" + fileName)
+}
+
+// GetFiles returns a list of files in a directory
+// basePath is the path to the directory
+func GetFiles(basePath string) ([]string, error) {
+	files, err := os.ReadDir(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	var fileNames []string
+	for _, file := range files {
+		fileNames = append(fileNames, file.Name())
+	}
+
+	return fileNames, nil
+}
+
+// GetFile returns a file from the disk
+// filePath is the path to the file
+func GetFile(filePath string) (*os.File, error) {
+	return os.Open(filePath)
 }
