@@ -66,7 +66,7 @@ func RenderMDtoHTMLHandler(c *fiber.Ctx) error {
 	}
 
 	htmlContent := utils.MdToHtmlHighlight(fileBytes)
-	return c.Render("index", fiber.Map{
+	return c.Render("views/index", fiber.Map{
 		"PageTitle": fileName,
 		"Content":   string(htmlContent),
 	})

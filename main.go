@@ -1,6 +1,10 @@
 package main
 
 import (
+	"embed"
+	"html/template"
+	"net/http"
+
 	"github.com/Darcoprogramador/go-notemarkdown/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -8,9 +12,17 @@ import (
 	htmlTemplate "github.com/gofiber/template/html/v2"
 )
 
+//go:embed views/*
+var viewsfs embed.FS
+
 func main() {
 
-	engine := htmlTemplate.New("./views", ".html")
+	engine := htmlTemplate.NewFileSystem(http.FS(viewsfs), ".html")
+	engine.AddFunc( // add unescape function
+		"unescape", func(s string) template.HTML {
+			return template.HTML(s)
+		},
+	)
 
 	// Pass the engine to the Views
 	app := fiber.New(fiber.Config{
